@@ -22,7 +22,8 @@
 #define BOX_HPP_
 
 #include <vector>
-
+#include <cstddef>
+#include <array>
 
 namespace Opm {
     
@@ -40,9 +41,9 @@ namespace Opm {
     private:
         void initIndexList();
         static void assertDims(const Box& globalBox, size_t idim , int l1 , int l2);
-        size_t m_dims[3];
-        size_t m_offset[3];
-        size_t m_stride[3];
+        std::array<size_t, 3> m_dims;
+        std::array<size_t, 3> m_offset;
+        std::array<size_t, 3> m_stride;
 
         bool   m_isGlobal;
         std::vector<size_t> m_indexList;
