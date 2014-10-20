@@ -70,34 +70,50 @@ namespace Opm {
             { }
             
             
-            void apply(std::vector<double>& ) const {
+            void apply(std::vector<double>& porvValues) const {
                 EclipseGridConstPtr grid = m_eclipseState.getEclipseGrid();
-                /*
-                  Observe that this apply method does not alter the
-                  values input vector, instead it fetches the PORV
-                  property one more time, and then manipulates that.
-                */
-                auto porv = m_eclipseState.getDoubleGridProperty("PORV");   
-                if (porv->containsNaN()) {
+                bool contains_nan = false;
+                {
+                    /**
+                       Comparing with nan is surprisngly painful; slightly more elegant
+                       solutions based on std::find() and std::find_if() all failed. 
+                    */
+                    size_t g = 0;
+                    while (true) {
+                        if (g == porvValues.size()) 
+                            break;
+
+                        if (std::isnan(porvValues[g])) {
+                            contains_nan = true;
+                            break;
+                        }
+                        
+                        g++;
+                    }
+                }
+                            
+
+                if (contains_nan) {
                     auto poro = m_eclipseState.getDoubleGridProperty("PORO");
                     auto ntg = m_eclipseState.getDoubleGridProperty("NTG");   
                     if (poro->containsNaN())
                         throw std::logic_error("Do not have information for the PORV keyword - some defaulted values in PORO");
                     {
-                        for (size_t globalIndex = 0; globalIndex < porv->getCartesianSize(); globalIndex++) {
-                            if (std::isnan(porv->iget(globalIndex))) {
+                        for (size_t globalIndex = 0; globalIndex < poro->getCartesianSize(); globalIndex++) {
+                            if (std::isnan(porvValues[globalIndex])) {
                                 double cell_poro = poro->iget(globalIndex);
                                 double cell_ntg = ntg->iget(globalIndex);
                                 double cell_volume = grid->getCellVolume(globalIndex);
-                                porv->iset( globalIndex , cell_poro * cell_volume * cell_ntg);
+                                porvValues[globalIndex] = cell_poro * cell_volume * cell_ntg;
                             }
                         }
                     } 
-                }
+                } 
                 
                 if (m_eclipseState.hasDoubleGridProperty("MULTPV")) {
                     auto multpv = m_eclipseState.getDoubleGridProperty("MULTPV");   
-                    porv->multiplyWith( *multpv );
+                    for (size_t globalIndex =  0; globalIndex < multpv->getCartesianSize(); globalIndex++) 
+                        porvValues[globalIndex] *= multpv->iget( globalIndex );
                 }
             }
             
