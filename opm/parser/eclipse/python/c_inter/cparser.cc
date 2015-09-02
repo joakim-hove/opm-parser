@@ -5,9 +5,8 @@
 
 extern "C" {
 
-    Opm::Deck * parser_parse_file(const Opm::Parser * parser , const char * file) {
-        Opm::ParseMode parseMode;
-        return parser->newDeckFromFile( file , parseMode );
+    Opm::Deck * parser_parse_file(const Opm::Parser * parser , const char * file , const Opm::ParseMode * parse_mode) {
+        return parser->newDeckFromFile( file , *parse_mode );
     }
 
 

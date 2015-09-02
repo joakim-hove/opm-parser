@@ -3,6 +3,8 @@ import os.path
 from ert.cwrap import BaseCClass, CWrapper
 from opm import OPM_LIB
 from opm.deck import Deck
+from opm.parser import ParseMode
+
 
 class Parser(BaseCClass):
     def __init__(self):
@@ -18,9 +20,9 @@ class Parser(BaseCClass):
         Parser.cNamespace().free( self )
 
         
-    def parseFile(self , filename):
+    def parseFile(self , filename , parse_mode):
         if os.path.isfile( filename ):
-            return Parser.cNamespace().parse_file(self , filename)
+            return Parser.cNamespace().parse_file(self , filename, parse_mode)
         else:
             raise IOError("No such file:%s" % filename)
 
@@ -32,4 +34,4 @@ cwrapper = CWrapper(OPM_LIB)
 Parser.cNamespace().alloc = cwrapper.prototype("c_void_p parser_alloc()")
 Parser.cNamespace().free  = cwrapper.prototype("void parser_free( parser )") 
 Parser.cNamespace().has_keyword = cwrapper.prototype("bool parser_has_keyword( parser , char* )")
-Parser.cNamespace().parse_file = cwrapper.prototype("deck_obj parser_parse_file( parser , char* )") 
+Parser.cNamespace().parse_file = cwrapper.prototype("deck_obj parser_parse_file( parser , char* , parse_mode)") 
