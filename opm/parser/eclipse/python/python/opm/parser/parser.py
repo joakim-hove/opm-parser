@@ -20,8 +20,10 @@ class Parser(BaseCClass):
         Parser.cNamespace().free( self )
 
         
-    def parseFile(self , filename , parse_mode):
+    def parseFile(self , filename , parse_mode = None):
         if os.path.isfile( filename ):
+            if parse_mode is None:
+                parse_mode = ParseMode( )
             return Parser.cNamespace().parse_file(self , filename, parse_mode)
         else:
             raise IOError("No such file:%s" % filename)
