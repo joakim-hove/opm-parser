@@ -62,7 +62,7 @@ namespace Opm {
          *        given keyword.
          */
         static size_t numTables(Opm::DeckKeywordConstPtr keyword);
-
+        static std::vector<std::pair<size_t , size_t> > recordRanges(Opm::DeckKeywordConstPtr keyword);
         /*!
          * \brief Return the index of the first record which applies
          *        for this table object.
@@ -76,11 +76,8 @@ namespace Opm {
         size_t numRecords() const;
 
     private:
-        static size_t getNumFlatItems(Opm::DeckRecordConstPtr deckRecord);
         double getFlatSiDoubleData(Opm::DeckRecordConstPtr deckRecord, unsigned flatItemIdx) const;
-
-        size_t m_firstRecordIdx;
-        size_t m_numRecords;
+        std::pair<size_t, size_t> m_recordRange;
     };
 
     typedef std::shared_ptr<MultiRecordTable> MultiRecordTablePtr;
