@@ -30,8 +30,6 @@ namespace Opm {
     class PvtgInnerTable;
 
     class PvtgOuterTable : protected MultiRecordTable {
-        typedef MultiRecordTable ParentType;
-
         friend class PvtgTable;
         friend class FullTable<PvtgOuterTable, PvtgInnerTable>;
         PvtgOuterTable() = default;
@@ -42,16 +40,15 @@ namespace Opm {
          */
         void init(Opm::DeckKeywordConstPtr keyword, size_t tableIdx)
         {
-            ParentType::init(keyword,
-                             std::vector<std::string>{"P", "RV", "BG", "MUG"},
-                             tableIdx,
-                             /*firstEntryOffset=*/0);
+            MultiRecordTable::init(keyword,
+                                   std::vector<std::string>{"P", "RV", "BG", "MUG"},
+                                   tableIdx);
 
-            ParentType::checkNonDefaultable("P");
-            ParentType::checkMonotonic("P", /*isAscending=*/true);
-            ParentType::applyDefaultsLinear("RV");
-            ParentType::applyDefaultsLinear("BG");
-            ParentType::applyDefaultsLinear("MUG");
+            MultiRecordTable::checkNonDefaultable("P");
+            MultiRecordTable::checkMonotonic("P", /*isAscending=*/true);
+            MultiRecordTable::applyDefaultsLinear("RV");
+            MultiRecordTable::applyDefaultsLinear("BG");
+            MultiRecordTable::applyDefaultsLinear("MUG");
         }
 
     public:

@@ -25,25 +25,22 @@ size_t SimpleTable::numTables(Opm::DeckKeywordConstPtr keyword)
 }
 
 // create table from single record
-void SimpleTable::init(Opm::DeckRecordConstPtr deckRecord,
-                             const std::vector<std::string> &columnNames,
-                             size_t firstEntityOffset)
+void SimpleTable::init(Opm::DeckItemConstPtr deckItem,
+                       const std::vector<std::string> &columnNames)
 {
     createColumns(columnNames);
 
-    size_t numFlatItems = getNumFlatItems(deckRecord);
-    if ( (numFlatItems - firstEntityOffset) % numColumns() != 0)
+    if ( (deckItem->size() % numColumns()) != 0)
         throw std::runtime_error("Number of columns in the data file is"
                                  "inconsistent with the ones specified");
-
-    for (size_t rowIdx = 0;
-         rowIdx*numColumns() < numFlatItems - firstEntityOffset;
-         ++rowIdx)
     {
-        for (size_t colIdx = 0; colIdx < numColumns(); ++colIdx) {
-            size_t deckItemIdx = rowIdx*numColumns() + firstEntityOffset + colIdx;
-            m_columns[colIdx].push_back(getFlatSiDoubleData(deckRecord, deckItemIdx));
-            m_valueDefaulted[colIdx].push_back(getFlatIsDefaulted(deckRecord, deckItemIdx));
+        size_t rows = deckItem->size() / numColumns();
+        for (size_t rowIdx = 0; rowIdx < rows; rowIdx++) {
+            for (size_t colIdx = 0; colIdx < numColumns(); ++colIdx) {
+                size_t deckItemIdx = rowIdx*numColumns() + colIdx;
+                m_columns[colIdx].push_back( deckItem->getSIDouble(deckItemIdx) );
+                m_valueDefaulted[colIdx].push_back( deckItem->defaultApplied(deckItemIdx) );
+            }
         }
     }
 }

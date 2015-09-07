@@ -48,8 +48,7 @@ size_t MultiRecordTable::numTables(Opm::DeckKeywordConstPtr keyword)
 // create table from first few items of multiple records
 void MultiRecordTable::init(Opm::DeckKeywordConstPtr keyword,
                             const std::vector<std::string> &columnNames,
-                            size_t tableIdx,
-                            size_t firstEntityOffset)
+                            size_t tableIdx)
 {
     createColumns(columnNames);
 
@@ -88,7 +87,7 @@ void MultiRecordTable::init(Opm::DeckKeywordConstPtr keyword,
                                      "inconsistent with the ones specified");
 
         for (size_t colIdx = 0; colIdx < numColumns(); ++colIdx) {
-            size_t deckItemIdx = colIdx + firstEntityOffset;
+            size_t deckItemIdx = colIdx;
             m_columns[colIdx].push_back(getFlatSiDoubleData(deckRecord, deckItemIdx));
             m_valueDefaulted[colIdx].push_back(getFlatIsDefaulted(deckRecord, deckItemIdx));
         }

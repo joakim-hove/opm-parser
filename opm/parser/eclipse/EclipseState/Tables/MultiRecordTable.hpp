@@ -44,8 +44,7 @@ namespace Opm {
          */
         void init(Opm::DeckKeywordConstPtr keyword,
                   const std::vector<std::string> &columnNames,
-                  size_t tableIndex,
-                  size_t firstEntityOffset);
+                  size_t tableIndex);
 
     public:
         MultiRecordTable() = default;
@@ -54,9 +53,8 @@ namespace Opm {
         // DO NOT TRY TO CALL THIS METHOD! it is only for the unit tests!
         void initFORUNITTESTONLY(Opm::DeckKeywordConstPtr keyword,
                                  const std::vector<std::string> &columnNames,
-                                 size_t tableIndex,
-                                 size_t firstEntityOffset)
-        { init(keyword, columnNames, tableIndex, firstEntityOffset); }
+                                 size_t tableIndex)
+        { init(keyword, columnNames, tableIndex); }
 #endif
 
         /*!

@@ -19,6 +19,8 @@
 #ifndef OPM_PARSER_PLYSHLOG_TABLE_HPP
 #define	OPM_PARSER_PLYSHLOG_TABLE_HPP
 
+#include <opm/parser/eclipse/Parser/ParserKeywords.hpp>
+
 #include "SimpleTable.hpp"
 
 namespace Opm {
@@ -37,7 +39,7 @@ namespace Opm {
         void init(Opm::DeckKeywordConstPtr keyword) {
             Opm::DeckRecordConstPtr record1 = keyword->getRecord(0);
             Opm::DeckRecordConstPtr dataRecord = keyword->getRecord(1);
-            
+
             const auto itemRefPolymerConcentration = record1->getItem("REF_POLYMER_CONCENTRATION");
             const auto itemRefSalinity = record1->getItem("REF_SALINITY");
             const auto itemRefTemperature = record1->getItem("REF_TEMPERATURE");
@@ -66,12 +68,11 @@ namespace Opm {
 
             m_data = new SimpleTable();
 
-            m_data->init(dataRecord,
+            m_data->init(dataRecord->getItem<ParserKeywords::PLYSHLOG::DATA>(),
                          std::vector<std::string>{
                                 "WaterVelocity",
                                 "ShearMultiplier"
-                             },
-                             /*firstEntityOffset=*/0);
+                                    });
 
             m_data->checkNonDefaultable("WaterVelocity");
             m_data->checkMonotonic("WaterVelocity", /*isAscending=*/true);
