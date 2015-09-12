@@ -76,7 +76,6 @@ namespace Opm {
         size_t numRecords() const;
 
     private:
-        double getFlatSiDoubleData(Opm::DeckRecordConstPtr deckRecord, unsigned flatItemIdx) const;
         std::pair<size_t, size_t> m_recordRange;
     };
 

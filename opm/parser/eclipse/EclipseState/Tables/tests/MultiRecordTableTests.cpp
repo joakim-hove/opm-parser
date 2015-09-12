@@ -86,4 +86,32 @@ BOOST_AUTO_TEST_CASE( MultiRecordNumTables2 ) {
     BOOST_CHECK_EQUAL( range3.second , 46 );
 }
 
+BOOST_AUTO_TEST_CASE( MultiRecordNumTables3 ) {
+    const char *deckData =
+        "TABDIMS\n"
+        "1 2 /\n"
+        "\n"
+        "PVTO\n"
+        " 1 2 3 4"
+        "   5 6 7/\n"
+        " 8 9 10 11 /\n"
+        "/\n"
+        "12 13 14 15\n"
+        "   16 17 18/\n"
+        "19 20 21 22/\n"
+        "/\n";
 
+    Opm::ParserPtr parser(new Opm::Parser);
+    Opm::DeckConstPtr deck(parser->parseString(deckData, Opm::ParseMode()));
+
+    auto ranges = MultiRecordTable::recordRanges( deck->getKeyword<ParserKeywords::PVTO>() );
+    BOOST_CHECK_EQUAL( 2 ,ranges.size() );
+
+    auto range1 = ranges[0];
+    BOOST_CHECK_EQUAL( range1.first , 0 );
+    BOOST_CHECK_EQUAL( range1.second , 2 );
+
+    auto range2 = ranges[1];
+    BOOST_CHECK_EQUAL( range2.first , 3 );
+    BOOST_CHECK_EQUAL( range2.second , 5 );
+}

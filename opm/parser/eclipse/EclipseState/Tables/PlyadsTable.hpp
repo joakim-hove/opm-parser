@@ -37,9 +37,9 @@ namespace Opm {
         void init(Opm::DeckItemConstPtr item)
         {
             SimpleTable::init(item,
-                             std::vector<std::string>{
+                              std::vector<std::string>{
                                  "PolymerConcentration",
-                                 "AdsorbedPolymer"
+                                  "AdsorbedPolymer"
                                      });
 
             SimpleTable::checkNonDefaultable("PolymerConcentration");
@@ -47,6 +47,7 @@ namespace Opm {
             SimpleTable::checkNonDefaultable("AdsorbedPolymer");
             SimpleTable::checkMonotonic("AdsorbedPolymer", /*isAscending=*/true, /*strictlyMonotonic=*/false);
         }
+
 
     public:
         PlyadsTable() = default;
@@ -56,7 +57,6 @@ namespace Opm {
         void initFORUNITTESTONLY(Opm::DeckItemConstPtr item)
         { init(item); }
 #endif
-
         using SimpleTable::numTables;
         using SimpleTable::numRows;
         using SimpleTable::numColumns;

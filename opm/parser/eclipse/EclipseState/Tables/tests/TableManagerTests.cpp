@@ -141,11 +141,11 @@ BOOST_AUTO_TEST_CASE(CreateMultiTable) {
     BOOST_CHECK_THROW(mrt.initFORUNITTESTONLY(deck->getKeyword("PVTO"),
                                               tooManyColumnNames,
                                               /*tableIdx=*/0),
-                                              std::runtime_error);
+                                              std::out_of_range);
 
     BOOST_CHECK_NO_THROW(mrt.initFORUNITTESTONLY(deck->getKeyword("PVTO"),
-                                                 justRightColumnNames,
-                                                 /*recordIdx=*/0));
+                                                 justRightColumnNames,0));
+
 }
 
 BOOST_AUTO_TEST_CASE(SwofTable_Tests) {

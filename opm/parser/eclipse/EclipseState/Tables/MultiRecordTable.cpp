@@ -16,6 +16,7 @@
   You should have received a copy of the GNU General Public License
   along with OPM.  If not, see <http://www.gnu.org/licenses/>.
  */
+#include <iostream>
 #include <opm/parser/eclipse/EclipseState/Tables/MultiRecordTable.hpp>
 
 namespace Opm {
@@ -61,11 +62,14 @@ void MultiRecordTable::init(Opm::DeckKeywordConstPtr keyword,
     m_recordRange = ranges[ tableIdx ];
     for (size_t  rowIdx = m_recordRange.first; rowIdx < m_recordRange.second; rowIdx++) {
         Opm::DeckRecordConstPtr deckRecord = keyword->getRecord(rowIdx);
+        Opm::DeckItemConstPtr indexItem = deckRecord->getItem(0);
+        Opm::DeckItemConstPtr dataItem = deckRecord->getItem(1);
 
-        for (size_t colIdx = 0; colIdx < numColumns(); ++colIdx) {
-            size_t deckItemIdx = colIdx;
-            m_columns[colIdx].push_back(getFlatSiDoubleData(deckRecord, deckItemIdx));
-            m_valueDefaulted[colIdx].push_back(getFlatIsDefaulted(deckRecord, deckItemIdx));
+        m_columns[0].push_back(indexItem->getSIDouble(0));
+        m_valueDefaulted[0].push_back(indexItem->defaultApplied(0));
+        for (size_t colIdx = 1; colIdx < numColumns(); ++colIdx) {
+            m_columns[colIdx].push_back(dataItem->getSIDouble(colIdx - 1));
+            m_valueDefaulted[colIdx].push_back(dataItem->defaultApplied(colIdx - 1));
         }
     }
 }
@@ -81,17 +85,4 @@ size_t MultiRecordTable::numRecords() const
 }
 
 
-double MultiRecordTable::getFlatSiDoubleData(Opm::DeckRecordConstPtr deckRecord, unsigned flatItemIdx) const
-{
-    unsigned itemFirstFlatIdx = 0;
-    for (unsigned i = 0; i < deckRecord->size(); ++ i) {
-        Opm::DeckItemConstPtr item = deckRecord->getItem(i);
-        if (itemFirstFlatIdx + item->size() > flatItemIdx)
-            return item->getSIDouble(flatItemIdx - itemFirstFlatIdx);
-        else
-            itemFirstFlatIdx += item->size();
-    }
-
-    throw std::range_error("Tried to access out-of-range flat item");
-}
 }
