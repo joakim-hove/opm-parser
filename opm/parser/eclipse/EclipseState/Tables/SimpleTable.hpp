@@ -40,10 +40,11 @@ namespace Opm {
          * This requires all data to be a list of doubles in the first
          * item of a given record index.
          */
+
+    public:
         void init(Opm::DeckItemConstPtr deckItem,
                   const std::vector<std::string> &columnNames);
 
-    public:
         SimpleTable() = default;
 
         /*!
