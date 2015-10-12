@@ -153,18 +153,7 @@ void SimpleTable::checkMonotonic(const std::string& columnName,
     }
 }
 
-void SimpleTable::applyDefaultsConstant(const std::string& columnName, double value)
-{
-    int columnIdx = m_columnNames.at(columnName);
-    int nRows = numRows();
 
-    for (int rowIdx = 0; rowIdx < nRows; ++rowIdx) {
-        if (m_valueDefaulted[columnIdx][rowIdx]) {
-            m_columns[columnIdx][rowIdx] = value;
-            m_valueDefaulted[columnIdx][rowIdx] = false;
-        }
-    }
-}
 
 void SimpleTable::applyDefaultsLinear(const std::string& columnName)
 {
