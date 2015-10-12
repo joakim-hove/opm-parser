@@ -110,6 +110,7 @@ EclipseState/Tables/VFPInjTable.cpp
 EclipseState/Tables/TableManager.cpp
 EclipseState/Tables/TableContainer.cpp
 EclipseState/Tables/PLYADSSTable.cpp
+EclipseState/Tables/TableColumn.cpp
 #
 EclipseState/Grid/GridProperty.cpp
 EclipseState/Grid/Box.cpp
@@ -270,6 +271,7 @@ EclipseState/Tables/VFPInjTable.hpp
 EclipseState/Tables/TableManager.hpp
 EclipseState/Tables/TableContainer.hpp
 EclipseState/Tables/PLYADSSTable.hpp
+EclipseState/Tables/TableColumn.hpp
 #
 Utility/WconinjeWrapper.hpp
 Utility/CompdatWrapper.hpp

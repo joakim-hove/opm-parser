@@ -1,5 +1,5 @@
 foreach(tapp TableManagerTests TabdimsTests MultiRecordTableTests TableContainerTests
-             PLYADSSTableTests)
+             PLYADSSTableTests TableColumnTests )
 
   opm_add_test(run${tapp} SOURCES ${tapp}.cpp
                           LIBRARIES opmparser ${Boost_LIBRARIES})
