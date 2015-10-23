@@ -17,6 +17,7 @@
   along with OPM.  If not, see <http://www.gnu.org/licenses/>.
  */
 
+#include <algorithm>
 #include <stdexcept>
 
 #include <opm/parser/eclipse/EclipseState/Tables/TableColumn.hpp>
@@ -29,6 +30,34 @@ namespace Opm {
 
     const std::string& TableColumn::name() const {
         return m_name;
+    }
+
+    bool TableColumn::hasDefault() const {
+        const auto find_true = std::find(m_defaulted.begin() , m_defaulted.end() , true);
+        if (find_true == m_defaulted.end())
+            return false;
+        else
+            return true;
+    }
+
+    double TableColumn::getMax() const {
+        if (m_values.size() == 0)
+            throw std::invalid_argument("Can not ask for maximum of empty column");
+
+        if (hasDefault())
+            throw std::invalid_argument("Can not search for min/max in a vector with defaults");
+
+        return *std::max_element( m_values.begin() , m_values.end() );
+    }
+
+    double TableColumn::getMin() const {
+        if (m_values.size() == 0)
+            throw std::invalid_argument("Can not ask for minimum of empty column");
+
+        if (hasDefault())
+            throw std::invalid_argument("Can not search for min/max in a vector with defaults");
+
+        return *std::min_element( m_values.begin() , m_values.end() );
     }
 
     size_t TableColumn::size() const {

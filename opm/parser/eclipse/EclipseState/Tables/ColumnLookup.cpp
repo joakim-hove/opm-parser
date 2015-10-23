@@ -17,35 +17,21 @@
   along with OPM.  If not, see <http://www.gnu.org/licenses/>.
 */
 
-#ifndef TABLE_COLUMN_HPP
-#define TABLE_COLUMN_HPP
+#include <stdexcept>
 
-#include <string>
-#include <vector>
-
+#include <opm/parser/eclipse/EclipseState/Tables/ColumnLookup.hpp>
 
 namespace Opm {
 
-    class TableColumn {
-    public:
-        TableColumn(const std::string& name);
-        const std::string& name() const;
-        size_t size() const;
-        void pushBackData( double value );
-        void pushBackDefault();
-        void updateValue(size_t index , double value);
-        const double& operator[](size_t index) const;
-        double getMax() const;
-        double getMin() const;
+    ColumnLookup::ColumnLookup( const TableColumn& column , double value) {
+        if (column.size() < 2)
+            throw std::invalid_argument("Column must have size >= 2");
 
-    private:
-        bool hasDefault() const;
+        if (value < column.getMin())
+            throw std::invalid_argument("Can not interpolate outside column range\n");
 
-        std::string m_name;
-        std::vector<double> m_values;
-        std::vector<bool> m_defaulted;
-    };
+        if (value > column.getMax())
+            throw std::invalid_argument("Can not interpolate outside column range\n");
+    }
+
 }
-
-
-#endif

@@ -17,33 +17,19 @@
   along with OPM.  If not, see <http://www.gnu.org/licenses/>.
 */
 
-#ifndef TABLE_COLUMN_HPP
-#define TABLE_COLUMN_HPP
+#ifndef COLUMN_LOOKUP_HPP
+#define COLUMN_LOOKUP_HPP
 
 #include <string>
 #include <vector>
 
+#include <opm/parser/eclipse/EclipseState/Tables/TableColumn.hpp>
 
 namespace Opm {
 
-    class TableColumn {
+    class ColumnLookup {
     public:
-        TableColumn(const std::string& name);
-        const std::string& name() const;
-        size_t size() const;
-        void pushBackData( double value );
-        void pushBackDefault();
-        void updateValue(size_t index , double value);
-        const double& operator[](size_t index) const;
-        double getMax() const;
-        double getMin() const;
-
-    private:
-        bool hasDefault() const;
-
-        std::string m_name;
-        std::vector<double> m_values;
-        std::vector<bool> m_defaulted;
+        ColumnLookup( const TableColumn& column , double value);
     };
 }
 
